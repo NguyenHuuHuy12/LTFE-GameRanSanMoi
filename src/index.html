@@ -14,16 +14,16 @@
 <body>
 <div class="container-khung">
     <div class="container-thanhthongtin">
-        <div class="col"><i class="fa-solid fa-map-location-dot"></i>Màn <b id="soman">1</b>/<span id="tongman">4</span></div>
-        <div class="col"><i class="fa-solid fa-apple-whole"></i> <b id="somoi">0</b>/<span id="tongsomoi">5</span></div>
-        <div class="col"><i class="fa-solid fa-start"></i> <b id="diem">0</b></div>
+        <div class="col o-tt"><i class="fa-solid fa-map-location-dot"></i>Màn <b id="soman">1</b>/<span id="tongman">4</span></div>
+        <div class="col o-tt"><i class="fa-solid fa-apple-whole"></i> <b id="somoi">0</b>/<span id="tongsomoi">5</span></div>
+        <div class="col o-tt"><i class="fa-solid fa-start"></i> <b id="diem">0</b></div>
         <div class="col ky-luc"><i class="fa-solid fa-trophy"></i> <b id="kyluc">0</b></div>
         <div class="col button">
             <button id="nut-dung" type="button" class="btn-pause"><i class="fa-solid fa-stop"></i></button>
             <button id="nut-qua-man" type="button" class="btn-next"><i class="fa-solid fa-next"></i></button>
         </div>
     </div>
-</div>
+
 
 <div class="d-flex align-items-center do-kho">
     <span class="mr-2">Độ khó</span>
@@ -33,5 +33,20 @@
     <b id="so-do-kho" class="ml-2">0%</b>
 </div>
 
+<div id="khung-ban" class="khung-ban">
+    <div id="ban" class="ban"></div>
+</div>
+
+<div class="phim-di-chuyen d-md-none">
+    <button type="button" class="btn" data-h="len"><i class="fa-solid fs-chevron-up"></i></button>
+    <button type="button" class="btn" data-h="xuong"><i class="fa-solid fs-chevron-down"></i></button>
+    <button type="button" class="btn" data-h="trai"><i class="fa-solid fs-chevron-left"></i></button>
+    <button type="button" class="btn" data-h="phai"><i class="fa-solid fs-chevron-right"></i></button>
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
