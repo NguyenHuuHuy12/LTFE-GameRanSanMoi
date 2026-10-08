@@ -1,0 +1,67 @@
+body{
+    min-height: 100vh;
+    background: #aaaa;
+    background-image: radial-gradient(circle at 20% 10%, #bbbbbb,transparent 50%), radial-gradient(circle at 70% 60%, #135245,transparent 50%);
+    color: white;
+    font-family: Baskerville, serif;
+}
+.container-khung{
+    max-width: 1200px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.container-thanhthongtin{
+    align-items:center ;
+}
+.container-thanhthongtin .o-tt{
+    background: #1726;
+    border: 1px solid #333;
+    border-radius: 15px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+.container-thanhthongtin .o-tt i{
+    color: orange;
+    margin-right: 10px;
+}
+.container-thanhthongtin #nut-dung #nut-qua-man{
+    width: 44px;
+    height: 40px;
+    padding: 0;
+    border-radius: 15px;
+}
+.do-kho{
+    margin: 10px 0;
+    font-size: 15px;
+    color: #9db5;
+}
+.do-kho .progress{
+    height: 10px;
+    background: #135245;
+}
+.do-kho .progress-bar{
+    transition: width 0.8s;
+}
+.do-kho b{
+    color: aliceblue;
+    min-width: 40px;
+    text-align: right;
+}
+.khung-ban{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #1726;
+    border:1px solid #333333 ;
+    border-radius: 15px;
+}
+.ban{
+    display: grid;
+    border-radius: 10px;
+    overflow: hidden;
+    touch-action: none;
+}
+.ban .o.chan
