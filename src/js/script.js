@@ -38,5 +38,46 @@ $(function (){
     var dangChoi = false;
     var tamDung = false;
 
+    try{
+        kyLuc= parseInt(localStorage.getItem("kyLuc"), 10)||0;
+    } catch (e){
+        kyLuc=0;
+    }
+    $('#kyluc').text(kyLuc);
+    $('#tongman').text(man.length)
+
+    function chuanHoa(giaTri, nho, lon) {
+        if(lon == nho)
+            return 0;
+        return (giaTri - nho)/(lon-nho);
+
+    }
+    function tinhDoKho(i) {
+        var m =man[i];
+        var dau =man[0];
+        var cuoi = man[man.length-1];
+        var tocDo = chuanHoa(dau.mili - m.mili, 0, dau.mili -cuoi.mili);
+        var san = chuanHoa(m.cot*m.hang, dau.cot*dau.hang, cuoi.cot*cuoi.hang);
+        var dai = chuanHoa(m.dai,dau.dai,cuoi.dai);
+        var tuong = chuanHoa(m.tuong.length, 0, cuoi.tuong.length);
+        var tong = 0.4 * tocDo+0.25*san+0.2*dai + 0.15*tuong;
+        return Math.round(10+tong*90);
+
+    }
+    function hienHop(tieuDe, noiDung,thongSo,chuNut,khiBam) {
+        dangChoi = false;
+
+        $('#mp-tieu-de').text(tieuDe);
+        $('#mp-noi-dung').text(noiDung);
+
+        var $ts = $('#mp-thong-so').empty();
+        if(thongSo){
+            for (var i = 0; i < thongSo.length; i++){
+                $ts.append('<span class = "badge badge-pill">'+ thongSo[i] +'</span>');
+            }
+        }
+
+    }
+
 
 })
