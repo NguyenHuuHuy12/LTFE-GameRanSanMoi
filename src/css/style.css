@@ -98,12 +98,65 @@ body{
     background: var(--ran);
     border-radius: 30%;
     opacity: var(--dd, 1);
-    .ban .dau::after{
-        content: '';
-        position: absolute;
-        top: 0;
-        left:0;
-        right: 0;
-        bottom:0;
+
+}
+.ban .dau::after{
+     content: '';
+     position: absolute;
+     top: 0;
+     left:0;
+     right: 0;
+     bottom:0;
+ }
+.ban .dau.h-phai::after{
+    background: radial-gradient(circle calc(var(--o) * 0.14) at 72% 25%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 72% 75%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+}
+.ban .dau.h-trai::after{
+    background: radial-gradient(circle calc(var(--o) * 0.14) at 28% 25%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 28% 75%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+}
+.ban .dau.h-len::after{
+    background: radial-gradient(circle calc(var(--o) * 0.14) at 25% 28%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 75% 28%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+}
+.ban .dau.h-xuong::after{
+    background: radial-gradient(circle calc(var(--o) * 0.14) at 25% 72%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 75% 72%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+}
+.ban .moi::before{
+    background: red;
+    border-radius: 50%;
+    top:3px;
+    left:3px;
+    right:3px;
+    bottom:3px;
+}
+.ban .moi::after{
+    content: '';
+    position: absolute;
+    width: 30%;
+    top: 5%;
+    left:52%;
+    height: 16%;
+    border-radius: 50%;
+    transform: rotate(-30deg);
+    background: #5cc24a;
+}
+.ban .thua{
+    animation: rung 0.3s;
+}
+.ban .thua .ran::before{
+    background: red;
+}
+@keyframes rung{
+    25%{
+        transform: translateX(-4px);
     }
+    75%{
+        transform: translateX(4px);
+    }
+}
+.modal-content{
+    background: #1726;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 15px;
+    text-align: center;
 }
