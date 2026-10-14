@@ -8,7 +8,7 @@ $(function (){
         }
         return kq;
     }
-    var man = [
+    var Cacman = [
         {
             ten:'Khởi đầu của rắn',
             cot:30, hang:25, mili:300,dai:3,muc:10,
@@ -32,8 +32,12 @@ $(function (){
     var hangDoi=[];
     var moi=null;
     var mapTuong={};
+    
     var dsO=[];
     var oDaTo = [];
+    var oMoi =null;
+    var coO=24;
+    
     var timer = null;
     var dangChoi = false;
     var tamDung = false;
@@ -44,7 +48,7 @@ $(function (){
         kyLuc=0;
     }
     $('#kyluc').text(kyLuc);
-    $('#tongman').text(man.length)
+    $('#tongman').text(Cacman.length)
 
     function chuanHoa(giaTri, nho, lon) {
         if(lon == nho)
@@ -53,9 +57,9 @@ $(function (){
 
     }
     function tinhDoKho(i) {
-        var m =man[i];
-        var dau =man[0];
-        var cuoi = man[man.length-1];
+        var m =Cacman[i];
+        var dau =Cacman[0];
+        var cuoi = Cacman[Cacman.length-1];
         var tocDo = chuanHoa(dau.mili - m.mili, 0, dau.mili -cuoi.mili);
         var san = chuanHoa(m.cot*m.hang, dau.cot*dau.hang, cuoi.cot*cuoi.hang);
         var dai = chuanHoa(m.dai,dau.dai,cuoi.dai);
@@ -76,7 +80,103 @@ $(function (){
                 $ts.append('<span class = "badge badge-pill">'+ thongSo[i] +'</span>');
             }
         }
+        $('#mp-nut').text(chuNut).prop('disabled', false).off('click').on('click', function (){
+            $(this).prop('disabled', true);
+           $modal.one('hidden.bs.modal', khiBam).modal('hide');
+        });
+        $modal.modal('show');
 
+    }
+    $modal.on('hidden.bs.modal', function (){
+        $('#mp-nut').trigger('focus')
+    });
+    function thongSoMan(i) {
+        var m=Cacman[i];
+        return[
+            'Toc do: <b>'+Math.round(10000/m.mili)/10+'o</b>',
+            'San: <b>'+m.cot+'x'+m.hang+'</b>',
+            'Ran: <b>'+m.dai+'dot</b>',
+            'Muc tieu:<b>'+m.muc+'tao</b>',
+            'Do kho:<b>'+tinhDoKho(i)+'%</b>'
+        ];
+
+    }
+    function hienCotTruyen() {
+        var m =Cacman[man];
+        dungSan();
+        hienHop('Man'+(man+1)+':'+m.ten,m.truyen,thongSoMan(man),'Bat dau',batDauMan);
+    }
+    function lay0(x,y) {
+        return dsO[y*man[man].cot+x];
+        
+    }
+    function tinhCoO() {
+        var m =Cacman[man];
+        var rong = $('#khung-ban').width()-14;
+        var cao =$(window).height()-230;
+        if($(window).width()<768) cao-=90;
+        coO = Math.floor(Math.min(rong/m.cot, cao/m.hang, 30));
+        if(coO<10) coO=10;
+        $ban.css({
+            '--o': coO+'px',
+            'grid-template-colums': 'repeat(' +m.cot+','+coO+'px)'
+        });
+        
+    }
+    function dungSan() {
+        var m =Cacman[man];
+        var html ='';
+        var x,y,i;
+        
+        for (y=0;y<m.hang;y++){
+            for(x=0;x<m.cot;x++){
+                html += '<div class="o' +(((x+y)%2 ===0)? 'chan' :'le')+'"></div>';
+                
+            }
+        }
+        $ban.html(html).removeClass('thua');
+        dsO =$ban.children().toArray();
+        oDaTo=[];
+        oMoi = null;
+        
+        $ban.css({
+            '--nen1': m.mau.nen1,
+            '--nen2': m.mau.nen2,
+            '--tuong': m.mau.tuong,
+            '--ran': m.mau.ran,
+        });
+        tinhCoO();
+        mapTuong ={};
+        for (i=0;i<m.tuong.length;i++){
+            var tx = m.tuong[i][0];
+            var ty = m.tuong[i][1];
+            mapTuong[tx +','+ty] =true;
+            lay0(tx,ty).classList.add('tuong');
+        }
+        
+    }
+    function batDauMan() {
+        var m =Cacman[man];
+        clearTimeout(timer);
+        tamDung =false;
+        $('#nut-dung i').attr('class', 'fa-solid -fa-pause');
+        dungSan();
+        var gx =Math.floor(m.cot/2);
+        var gy =Math.floor(m.hang/2);
+        ran=[];
+        for (var j=0 ; j<m.dai; j++){
+            ran.push({x: gx-j, y: gy})
+        }
+        huong ={x:1,y:0};
+        hangDoi=[];
+        moiAn=0;
+        diem=diemDauMan;
+        capNhatHub();
+        sinhMoi();
+        ve();
+
+        dangChoi = true;
+        timer = setTimeout(buocDi,700);
     }
 
 
