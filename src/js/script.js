@@ -178,6 +178,43 @@ $(function (){
         dangChoi = true;
         timer = setTimeout(buocDi,700);
     }
+    function capNhatHub() {
+        var m =Cacman[man];
+        var dk = tinhDoKho(man);
+
+        $('#soman').text(man+1);
+        $('#somoi').text(moiAn);
+        $('#muc-tieu').text(m.muc);
+        $('#diem').text(diem);
+        $('#kyluc').text(kyLuc);
+        $('#so-do-kho').text(dk+'%');
+        $('#vach-do-kho').css('width',dk+'%').removeClass('bg-success bg-warning bg-danger').addClass(dk<40? 'bg-success':(dk<70? 'bg-warning':'bg-danger'));
+
+    }
+    function sinhMoi() {
+        var m =Cacman[man];
+        var trong = [];
+
+        for(var y=0;y<m.hang;y++){
+            for(var x=0;x<m.cot;x++){
+                if(mapTuong[x+','+y]) continue;
+                var trung=false;
+                for(var k=0;k<ran.length;k++){
+                    if(ran[k].x===x && ran[k].y===y){
+                        trung=true;
+                        break;
+                    }
+                    if(!trung) trong.push({x:x,y:y});
+                }
+            }
+            moi=trong[Math.floor(Math.random()*trong.length)];
+            if(oMoi) oMoi.classList.remove('moi');
+            oMoi = lay0(moi.x,moi.y);
+            oMoi.classList.add('moi');
+
+        }
+
+    }
 
 
 })
