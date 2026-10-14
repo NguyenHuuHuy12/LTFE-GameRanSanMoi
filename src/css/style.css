@@ -160,3 +160,77 @@ body{
     border-radius: 15px;
     text-align: center;
 }
+.modal-content .modal-header,
+.modal-content .modal-footer {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+.modal-content .modal-header {
+    justify-content: center;
+}
+.modal-content .modal-title {
+    font-family: "Baloo 2", "Segoe UI", Tahoma, sans-serif;
+    font-size: 24px;
+    color: #f4c542;
+}
+.modal-content .modal-body p {
+    font-size: 17px;
+    line-height: 1.5;
+}
+.modal-content .badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: #9db5a2;
+    font-weight: 500;
+    font-size: 14px;
+    padding: 5px 10px;
+    margin: 3px;
+}
+.modal-content .badge b {
+    color: #eaf3e4;
+}
+.modal-content .btn-lg {
+    font-family: "Baloo 2", "Segoe UI", Tahoma, sans-serif;
+    font-weight: 700;
+    padding: 6px 26px;
+}
+
+.phim-di-chuyen {
+    display: grid;
+    margin: 12px auto 0;
+    width: 190px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-areas: ". len ." "trai xuong phai";
+    gap: 6px;
+}
+.phim-di-chuyen .btn {
+    height: 54px;
+    background: #17261d;
+    color: #eaf3e4;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 20px;
+}
+.phim-di-chuyen [data-h=len] {
+    grid-area: len;
+}
+.phim-di-chuyen [data-h=trai] {
+    grid-area: trai;
+}
+.phim-di-chuyen [data-h=xuong] {
+    grid-area: xuong;
+}
+.phim-di-chuyen [data-h=phai] {
+    grid-area: phai;
+}
+
+@media (max-width: 560px) {
+    .container-thanhthongtin .o-tt {
+        font-size: 15px;
+        padding: 4px 8px;
+        margin-right: 5px;
+    }
+    .modal-content .modal-title {
+        font-size: 20px;
+    }
+    .modal-content .modal-body p {
+        font-size: 15px;
+    }
+}
