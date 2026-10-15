@@ -207,14 +207,205 @@ $(function (){
                     if(!trung) trong.push({x:x,y:y});
                 }
             }
+        }
             moi=trong[Math.floor(Math.random()*trong.length)];
             if(oMoi) oMoi.classList.remove('moi');
             oMoi = lay0(moi.x,moi.y);
             oMoi.classList.add('moi');
 
+    }
+    function buocDi() {
+        if(!dangChoi || tamDung)
+            return;
+        if(hangDoi.length>0){
+            huong = hangDoi.shift();
         }
+        var dau =ran[0];
+        var dauMoi={x:dau.x+huong.x,y:dau.y+huong.y};
+        if(vaCham(dauMoi)){
+            thuaMan();
+            return;
+        }
+        ran.unshift(dauMoi);
+        if(dauMoi.x===moi.x && dauMoi.y===moi.y){
+            moiAn++;
+            diem += 10*(man+1);
+            if(diem>kyLuc){
+                kyLuc=diem;
+                try {
+                    localStorage.setItem("kyLuc", kyLuc);
+                }
+                catch (e) {
+
+                }}
+                capNhatHub();
+                if(moiAn>= Cacman[man].muc){
+                    ve();
+                    thangMan();
+                    return;
+                }
+                sinhMoi();
+            } else {
+                ran.pop();
+            }
+            ve();
+            timer = setTimeout(buocDi, Cacman[man].mili);
 
     }
 
+    function vaCham(p) {
+        var m = Cacman[man];
 
-})
+        if (p.x < 0 || p.y < 0 || p.x >= m.cot || p.y >= m.hang)
+            return true;
+        if (mapTuong[p.x + ',' + p.y])
+            return true;
+
+        for (var i = 0; i < ran.length - 1; i++) {
+            if (ran[i].x === p.x && ran[i].y === p.y)
+                return true;
+        }
+        return false;
+    }
+
+    function thangMan() {
+        dangChoi = false;
+        clearTimeout(timer);
+
+        var m = Cacman[man];
+
+        if (man === Cacman.length - 1) {
+            hienHop('Ran hoa Rong', m.ketThuc, ['Tổng điểm: <b>' + diem + '</b>'], 'Chơi lại từ đầu', function () {
+                man = 0;
+                diem = 0;
+                diemDauMan = 0;
+                hienCotTruyen();
+            });
+        } else {
+            hienHop('Hoàn thành màn ' + (man + 1), m.ketThuc, ['Điểm: <b>' + diem + '</b>'], 'Màn tiếp theo', function () {
+                man++;
+                diemDauMan = diem;
+                hienCotTruyen();
+            });
+        }
+    }
+    function thuaMan() {
+        dangChoi = false;
+        clearTimeout(timer);
+        $ban.addClass('thua');
+
+        var moiDaAn = moiAn;
+        var muc = Cacman[man].muc;
+
+        setTimeout(function () {
+            hienHop('Ran ngã rồi', 'Rắn đã đâm vào chướng ngại. Hít một hơi và thử lại màn này nhé.', ['Đã ăn: <b>' + moiDaAn + '/' + muc + '</b>'], 'Chơi lại màn', function () {
+                diem = diemDauMan;
+                batDauMan();
+            });
+        }, 450);
+    }
+    var TEN_HUONG = ['h-len', 'h-xuong', 'h-trai', 'h-phai'];
+
+    function tenHuong() {
+        if (huong.x === 1) return 'h-phai';
+        if (huong.x === -1) return 'h-trai';
+        if (huong.y === -1) return 'h-len';
+        return 'h-xuong';
+    }
+    function ve() {
+        var i, el;
+
+        for (i = 0; i < oDaTo.length; i++) {
+            el = oDaTo[i];
+            el.classList.remove('ran', 'dau', TEN_HUONG[0], TEN_HUONG[1], TEN_HUONG[2], TEN_HUONG[3]);
+            el.style.removeProperty('--dd');
+        }
+        oDaTo = [];
+
+        for (i = 0; i < ran.length; i++) {
+            el = lay0(ran[i].x, ran[i].y);
+            el.classList.add('ran');
+            el.style.setProperty('--dd', (0.55 + 0.45 * (1 - i / ran.length)).toFixed(2));
+            oDaTo.push(el);
+        }
+
+        el = lay0(ran[0].x, ran[0].y);
+        el.classList.add('dau', tenHuong());
+    }
+    function doiHuong(dx, dy) {
+        if (!dangChoi || tamDung)
+            return;
+
+        var cuoi = hangDoi.length > 0 ? hangDoi[hangDoi.length - 1] : huong;
+        if (cuoi.x === -dx && cuoi.y === -dy)
+            return;
+        if (cuoi.x === dx && cuoi.y === dy)
+            return;
+        if (hangDoi.length < 2) {
+            hangDoi.push({ x: dx, y: dy });
+        }
+    }
+
+    function doiTamDung() {
+        if (!dangChoi)
+            return;
+
+        tamDung = !tamDung;
+        if (tamDung) {
+            clearTimeout(timer);
+            $('#nut-tam-dung i').attr('class', 'fa-solid fa-play');
+        } else {
+            $('#nut-tam-dung i').attr('class', 'fa-solid fa-pause');
+            timer = setTimeout(buocDi, Cacman[man].mili);
+        }
+    }
+
+    $(document).on('keydown', function (e) {
+        var k = e.key;
+        if (k === 'ArrowUp' || k === 'w' || k === 'W') { doiHuong(0, -1); e.preventDefault(); }
+        else if (k === 'ArrowDown' || k === 's' || k === 'S') { doiHuong(0, 1); e.preventDefault(); }
+        else if (k === 'ArrowLeft' || k === 'a' || k === 'A') { doiHuong(-1, 0); e.preventDefault(); }
+        else if (k === 'ArrowRight' || k === 'd' || k === 'D') { doiHuong(1, 0); e.preventDefault(); }
+        else if ((k === ' ' || k === 'p' || k === 'P') && dangChoi) { doiTamDung(); e.preventDefault(); }
+    });
+
+    $('#nut-tam-dung').on('click', function () {
+        doiTamDung();
+        $(this).trigger('blur');
+    });
+
+    $('.phim-dt .btn').on('click', function () {
+        var h = $(this).data('h');
+        if (h === 'len') doiHuong(0, -1);
+        if (h === 'xuong') doiHuong(0, 1);
+        if (h === 'trai') doiHuong(-1, 0);
+        if (h === 'phai') doiHuong(1, 0);
+        $(this).trigger('blur');
+    });
+
+    var chamX = 0;
+    var chamY = 0;
+    var ban = document.getElementById('ban');
+
+    ban.addEventListener('touchstart', function (e) {
+        chamX = e.touches[0].clientX;
+        chamY = e.touches[0].clientY;
+    }, { passive: true });
+
+    ban.addEventListener('touchend', function (e) {
+        var dx = e.changedTouches[0].clientX - chamX;
+        var dy = e.changedTouches[0].clientY - chamY;
+        if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            doiHuong(dx > 0 ? 1 : -1, 0);
+        } else {
+            doiHuong(0, dy > 0 ? 1 : -1);
+        }
+    }, { passive: true });
+
+    $(window).on('resize', tinhCoO);
+
+    hienCotTruyen();
+
+});
