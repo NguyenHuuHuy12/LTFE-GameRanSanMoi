@@ -11,7 +11,7 @@ $(function (){
     var Cacman = [
         {
             ten:'Khởi đầu của rắn',
-            cot:30, hang:25, mili:300,dai:3,muc:10,
+            cot:30, hang:25, mili:300,dai:3,muc:10, batdau:{x:9,y:12},
             tuong:khoi(5,2,5,7).concat(khoi(5,11,5,16), khoi(15,2,15,7), khoi(15,11,15,16), khoi(10,3,10,5)),
             mau:{nen1:'#262a33',nen2:'#2b303a',tuong:'#6f7787',ran:'#7be'},
             truyen:'trong cơn mưa lớn rắn nở ra giữa dãy núi nhiều yêu thú rắn phải nhanh chóng mạnh lên và bài học đầu đời là kiếm ăn',
@@ -19,7 +19,7 @@ $(function (){
         }
     ]
     var $ban = $('#ban');
-    var #modal = $('#modal');
+    var $modal = $('#modal-truyen');
 
     var man =0;
     var diem=0;
@@ -32,12 +32,12 @@ $(function (){
     var hangDoi=[];
     var moi=null;
     var mapTuong={};
-    
+
     var dsO=[];
     var oDaTo = [];
     var oMoi =null;
     var coO=24;
-    
+
     var timer = null;
     var dangChoi = false;
     var tamDung = false;
@@ -82,7 +82,7 @@ $(function (){
         }
         $('#mp-nut').text(chuNut).prop('disabled', false).off('click').on('click', function (){
             $(this).prop('disabled', true);
-           $modal.one('hidden.bs.modal', khiBam).modal('hide');
+            $modal.one('hidden.bs.modal', khiBam).modal('hide');
         });
         $modal.modal('show');
 
@@ -93,22 +93,22 @@ $(function (){
     function thongSoMan(i) {
         var m=Cacman[i];
         return[
-            'Toc do: <b>'+Math.round(10000/m.mili)/10+'o</b>',
-            'San: <b>'+m.cot+'x'+m.hang+'</b>',
-            'Ran: <b>'+m.dai+'dot</b>',
-            'Muc tieu:<b>'+m.muc+'tao</b>',
-            'Do kho:<b>'+tinhDoKho(i)+'%</b>'
+            'Tốc độ: <b>'+Math.round(10000/m.mili)/10+' ô/giây</b>',
+            'Sân: <b>'+m.cot+'x'+m.hang+'</b>',
+            'Rắn: <b>'+m.dai+' đốt</b>',
+            'Mục tiêu: <b>'+m.muc+' táo</b>',
+            'Độ khó: <b>'+tinhDoKho(i)+'%</b>'
         ];
 
     }
     function hienCotTruyen() {
         var m =Cacman[man];
         dungSan();
-        hienHop('Man'+(man+1)+':'+m.ten,m.truyen,thongSoMan(man),'Bat dau',batDauMan);
+        hienHop('Màn '+(man+1)+': '+m.ten,m.truyen,thongSoMan(man),'Bắt đầu',batDauMan);
     }
     function lay0(x,y) {
-        return dsO[y*man[man].cot+x];
-        
+        return dsO[y*Cacman[man].cot+x];
+
     }
     function tinhCoO() {
         var m =Cacman[man];
@@ -119,26 +119,26 @@ $(function (){
         if(coO<10) coO=10;
         $ban.css({
             '--o': coO+'px',
-            'grid-template-colums': 'repeat(' +m.cot+','+coO+'px)'
+            'grid-template-columns': 'repeat(' +m.cot+','+coO+'px)'
         });
-        
+
     }
     function dungSan() {
         var m =Cacman[man];
         var html ='';
         var x,y,i;
-        
+
         for (y=0;y<m.hang;y++){
             for(x=0;x<m.cot;x++){
-                html += '<div class="o' +(((x+y)%2 ===0)? 'chan' :'le')+'"></div>';
-                
+                html += '<div class="o ' +(((x+y)%2 ===0)? 'chan' :'le')+'"></div>';
+
             }
         }
         $ban.html(html).removeClass('thua');
         dsO =$ban.children().toArray();
         oDaTo=[];
         oMoi = null;
-        
+
         $ban.css({
             '--nen1': m.mau.nen1,
             '--nen2': m.mau.nen2,
@@ -153,16 +153,16 @@ $(function (){
             mapTuong[tx +','+ty] =true;
             lay0(tx,ty).classList.add('tuong');
         }
-        
+
     }
     function batDauMan() {
         var m =Cacman[man];
         clearTimeout(timer);
         tamDung =false;
-        $('#nut-dung i').attr('class', 'fa-solid -fa-pause');
+        $('#nut-dung i').attr('class', 'fa-solid fa-pause');
         dungSan();
-        var gx =Math.floor(m.cot/2);
-        var gy =Math.floor(m.hang/2);
+        var gx = m.batdau ? m.batdau.x : Math.floor(m.cot/2);
+        var gy = m.batdau ? m.batdau.y : Math.floor(m.hang/2);
         ran=[];
         for (var j=0 ; j<m.dai; j++){
             ran.push({x: gx-j, y: gy})
@@ -184,7 +184,7 @@ $(function (){
 
         $('#soman').text(man+1);
         $('#somoi').text(moiAn);
-        $('#muc-tieu').text(m.muc);
+        $('#tongsomoi').text(m.muc);
         $('#diem').text(diem);
         $('#kyluc').text(kyLuc);
         $('#so-do-kho').text(dk+'%');
@@ -204,14 +204,14 @@ $(function (){
                         trung=true;
                         break;
                     }
-                    if(!trung) trong.push({x:x,y:y});
                 }
+                if(!trung) trong.push({x:x,y:y});
             }
         }
-            moi=trong[Math.floor(Math.random()*trong.length)];
-            if(oMoi) oMoi.classList.remove('moi');
-            oMoi = lay0(moi.x,moi.y);
-            oMoi.classList.add('moi');
+        moi=trong[Math.floor(Math.random()*trong.length)];
+        if(oMoi) oMoi.classList.remove('moi');
+        oMoi = lay0(moi.x,moi.y);
+        oMoi.classList.add('moi');
 
     }
     function buocDi() {
@@ -238,18 +238,18 @@ $(function (){
                 catch (e) {
 
                 }}
-                capNhatHub();
-                if(moiAn>= Cacman[man].muc){
-                    ve();
-                    thangMan();
-                    return;
-                }
-                sinhMoi();
-            } else {
-                ran.pop();
+            capNhatHub();
+            if(moiAn>= Cacman[man].muc){
+                ve();
+                thangMan();
+                return;
             }
-            ve();
-            timer = setTimeout(buocDi, Cacman[man].mili);
+            sinhMoi();
+        } else {
+            ran.pop();
+        }
+        ve();
+        timer = setTimeout(buocDi, Cacman[man].mili);
 
     }
 
@@ -275,7 +275,7 @@ $(function (){
         var m = Cacman[man];
 
         if (man === Cacman.length - 1) {
-            hienHop('Ran hoa Rong', m.ketThuc, ['Tổng điểm: <b>' + diem + '</b>'], 'Chơi lại từ đầu', function () {
+            hienHop('Rắn hóa Rồng', m.ketthuc, ['Tổng điểm: <b>' + diem + '</b>'], 'Chơi lại từ đầu', function () {
                 man = 0;
                 diem = 0;
                 diemDauMan = 0;
@@ -298,7 +298,7 @@ $(function (){
         var muc = Cacman[man].muc;
 
         setTimeout(function () {
-            hienHop('Ran ngã rồi', 'Rắn đã đâm vào chướng ngại. Hít một hơi và thử lại màn này nhé.', ['Đã ăn: <b>' + moiDaAn + '/' + muc + '</b>'], 'Chơi lại màn', function () {
+            hienHop('Rắn ngã rồi', 'Rắn đã đâm vào chướng ngại. Hít một hơi và thử lại màn này nhé.', ['Đã ăn: <b>' + moiDaAn + '/' + muc + '</b>'], 'Chơi lại màn', function () {
                 diem = diemDauMan;
                 batDauMan();
             });
@@ -353,9 +353,9 @@ $(function (){
         tamDung = !tamDung;
         if (tamDung) {
             clearTimeout(timer);
-            $('#nut-tam-dung i').attr('class', 'fa-solid fa-play');
+            $('#nut-dung i').attr('class', 'fa-solid fa-play');
         } else {
-            $('#nut-tam-dung i').attr('class', 'fa-solid fa-pause');
+            $('#nut-dung i').attr('class', 'fa-solid fa-pause');
             timer = setTimeout(buocDi, Cacman[man].mili);
         }
     }
@@ -369,12 +369,12 @@ $(function (){
         else if ((k === ' ' || k === 'p' || k === 'P') && dangChoi) { doiTamDung(); e.preventDefault(); }
     });
 
-    $('#nut-tam-dung').on('click', function () {
+    $('#nut-dung').on('click', function () {
         doiTamDung();
         $(this).trigger('blur');
     });
 
-    $('.phim-dt .btn').on('click', function () {
+    $('.phim-di-chuyen .btn').on('click', function () {
         var h = $(this).data('h');
         if (h === 'len') doiHuong(0, -1);
         if (h === 'xuong') doiHuong(0, 1);
