@@ -7,11 +7,13 @@ body{
 }
 .container-khung{
     max-width: 1200px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    margin: 0 auto;
+    padding: 10px 15px;
 }
 .container-thanhthongtin{
-    align-items:center ;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 }
 .container-thanhthongtin .o-tt{
     background: #1726;
@@ -26,7 +28,7 @@ body{
     color: orange;
     margin-right: 10px;
 }
-.container-thanhthongtin #nut-dung #nut-qua-man{
+.container-thanhthongtin #nut-dung{
     width: 44px;
     height: 40px;
     padding: 0;
@@ -101,13 +103,13 @@ body{
 
 }
 .ban .dau::after{
-     content: '';
-     position: absolute;
-     top: 0;
-     left:0;
-     right: 0;
-     bottom:0;
- }
+    content: '';
+    position: absolute;
+    top: 0;
+    left:0;
+    right: 0;
+    bottom:0;
+}
 .ban .dau.h-phai::after{
     background: radial-gradient(circle calc(var(--o) * 0.14) at 72% 25%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 72% 75%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
 }
@@ -142,7 +144,7 @@ body{
 .ban .thua{
     animation: rung 0.3s;
 }
-.ban .thua .ran::before{
+.ban.thua .ran::before{
     background: red;
 }
 @keyframes rung{
