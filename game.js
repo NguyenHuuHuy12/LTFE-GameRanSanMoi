@@ -19,7 +19,7 @@ $(function (){
         },
         {
             ten:'Đất rung chuyển',
-            cot:45, hang:38, mili:260,dai:3,muc:15, batdau:{x:9,y:19}, tuongNoi:true,
+            cot:45, hang:38, mili:240,dai:3,muc:15, batdau:{x:9,y:19}, tuongNoi:{soO:6,soTuong:2},
             tuong:khoi(8,4,8,10).concat(khoi(8,28,8,34), khoi(22,4,22,12), khoi(22,26,22,34), khoi(34,8,34,16), khoi(34,22,34,30), khoi(14,15,18,15), khoi(26,23,30,23)),
             mau:{nen1:'#33281f',nen2:'#3a2f25',tuong:'#8a6a4a',ran:'#e8a85c'},
             truyen:'rắn lớn lên và tìm đến một vùng đất rộng hơn nhưng mặt đất ở đây không yên tĩnh những bức tường đá thỉnh thoảng trồi lên từ lòng đất chắn ngang đường đi',
@@ -27,7 +27,7 @@ $(function (){
         },
         {
             ten:'Cơn thịnh nộ của sét',
-            cot:45, hang:38, mili:260,dai:3,muc:20, batdau:{x:9,y:19}, set:{chuKy:2000,soTia:3},
+            cot:45, hang:38, mili:230,dai:3,muc:20, batdau:{x:9,y:19}, set:{chuKy:2000,soTia:15},
             tuong:khoi(8,4,8,10).concat(khoi(8,28,8,34), khoi(22,4,22,12), khoi(22,26,22,34), khoi(34,8,34,16), khoi(34,22,34,30), khoi(14,15,18,15), khoi(26,23,30,23)),
             mau:{nen1:'#1b1f3a',nen2:'#20254a',tuong:'#5a5f8f',ran:'#7ef0ff'},
             truyen:'bầu trời tối sầm lại sét liên tục giáng xuống sân đấu rắn phải vừa kiếm ăn vừa tránh những tia sét có thể cướp đi thành quả của mình',
@@ -35,12 +35,20 @@ $(function (){
         },
         {
             ten:'Núi lửa thức giấc',
-            cot:45, hang:38, mili:260,dai:3,muc:25, batdau:{x:22,y:19}, nuiLua:{chuKy:5000,soNui:4,soCuc:5},
+            cot:45, hang:38, mili:220,dai:3,muc:25, batdau:{x:22,y:19}, nuiLua:{chuKy:5000,soNui:4,soCuc:5},
             tuong:khoi(8,6,8,12).concat(khoi(8,26,8,32), khoi(16,10,22,10), khoi(16,28,22,28), khoi(26,4,26,9), khoi(26,29,26,34), khoi(36,10,36,16), khoi(36,22,36,28), khoi(30,18,34,18), khoi(40,14,40,16)),
             nui:khoi(0,0,1,1).concat(khoi(43,0,44,1), khoi(0,36,1,37), khoi(43,36,44,37)),
             mau:{nen1:'#2a1612',nen2:'#321b16',tuong:'#6b5047',ran:'#ffd24a'},
             truyen:'rắn đi đến miền đất cuối cùng nơi bốn ngọn núi lửa ở bốn góc sân đã thức giấc dung nham văng ra khắp nơi chạm vào là bỏng và khi nguội sẽ hóa thành đá chắn đường',
-            ketthuc:'rắn đã vượt qua lửa sét và đất rung chuyển rắn hóa thành rồng'
+            ketthuc:'rắn đã vượt qua lửa sét và đất rung chuyển nhưng một bóng ma lạnh lẽo bắt đầu bám theo phía sau'
+        },
+        {
+            ten:'Bóng ma săn đuổi',
+            cot:45, hang:38, mili:210,dai:3,muc:30, batdau:{x:9,y:19}, ma:{x:40,y:3,nhip:2,dong:3000},
+            tuong:khoi(8,6,8,12).concat(khoi(8,26,8,32), khoi(14,14,20,14), khoi(14,24,20,24), khoi(26,8,26,14), khoi(26,24,26,30), khoi(32,16,38,16), khoi(32,22,38,22), khoi(38,6,38,10), khoi(38,28,38,32)),
+            mau:{nen1:'#1d1a2e',nen2:'#232038',tuong:'#4b4570',ran:'#7dffb0'},
+            truyen:'một bóng ma lạnh lẽo trồi lên từ sương mù và bám theo rắn từng bước chạm vào là mất mạng tường đá có thể chặn đường nó và mỗi quả rắn ăn được sẽ làm bóng ma đóng băng vài giây',
+            ketthuc:'rắn đã cắt đuôi được bóng ma và hóa thành rồng'
         }
     ]
     var $ban = $('#ban');
@@ -79,6 +87,9 @@ $(function (){
     var dsNui = [];
     var tgNuiTiep = 5000;
     var xoaPhunLuc = 0;
+    var ma = null;
+    var tgDong = 0;
+    var demMa = 0;
 
     try{
         kyLuc= parseInt(localStorage.getItem("kyLuc"), 10)||0;
@@ -220,6 +231,10 @@ $(function (){
         mapDung={};
         tgNuiTiep= m.nuiLua ? m.nuiLua.chuKy : 5000;
         xoaPhunLuc=0;
+        ma= m.ma ? {x:m.ma.x,y:m.ma.y} : null;
+        tgDong=0;
+        demMa=0;
+        if(ma) lay0(ma.x,ma.y).classList.add('ma');
         var gx = m.batdau ? m.batdau.x : Math.floor(m.cot/2);
         var gy = m.batdau ? m.batdau.y : Math.floor(m.hang/2);
         ran=[];
@@ -284,11 +299,11 @@ $(function (){
         var m =Cacman[man];
         for(var lan=0;lan<50;lan++){
             var ngang = Math.random()<0.5;
-            var x = Math.floor(Math.random()*(m.cot-(ngang? 3:0)));
-            var y = Math.floor(Math.random()*(m.hang-(ngang? 0:3)));
+            var x = Math.floor(Math.random()*(m.cot-(ngang? m.tuongNoi.soO-1:0)));
+            var y = Math.floor(Math.random()*(m.hang-(ngang? 0:m.tuongNoi.soO-1)));
             var cacO = [];
             var tot = true;
-            for(var k=0;k<4;k++){
+            for(var k=0;k<m.tuongNoi.soO;k++){
                 var cx = ngang? x+k : x;
                 var cy = ngang? y : y+k;
                 if(mapTuong[cx+','+cy] || mapChop[cx+','+cy] || trungRan(cx,cy) || (moi.x===cx && moi.y===cy)){
@@ -308,10 +323,13 @@ $(function (){
         }
     }
     function capNhatTuongNoi() {
+        var m =Cacman[man];
         var i,j,t,o,k,coVat;
         if(thoiGian>=tgTuongTiep){
             tgTuongTiep+=3000;
-            sinhTuongNoi();
+            for(i=0;i<m.tuongNoi.soTuong;i++){
+                sinhTuongNoi();
+            }
         }
         for(i=dsTuongNoi.length-1;i>=0;i--){
             t=dsTuongNoi[i];
@@ -449,12 +467,53 @@ $(function (){
             }
         }
     }
+    function capNhatMa() {
+        var m =Cacman[man];
+        var dx,dy,sx,sy;
+        var o =lay0(ma.x,ma.y);
+        if(thoiGian<tgDong){
+            o.classList.add('dong');
+            return;
+        }
+        o.classList.remove('dong');
+        demMa++;
+        if(demMa>=m.ma.nhip){
+            demMa=0;
+            dx=ran[0].x-ma.x;
+            dy=ran[0].y-ma.y;
+            sx=0;
+            sy=0;
+            if(dx>0) sx=1;
+            if(dx<0) sx=-1;
+            if(dy>0) sy=1;
+            if(dy<0) sy=-1;
+            if(Math.abs(dx)>=Math.abs(dy)){
+                if(sx!==0 && !mapTuong[(ma.x+sx)+','+ma.y]){
+                    ma.x+=sx;
+                } else if(sy!==0 && !mapTuong[ma.x+','+(ma.y+sy)]){
+                    ma.y+=sy;
+                }
+            } else {
+                if(sy!==0 && !mapTuong[ma.x+','+(ma.y+sy)]){
+                    ma.y+=sy;
+                } else if(sx!==0 && !mapTuong[(ma.x+sx)+','+ma.y]){
+                    ma.x+=sx;
+                }
+            }
+            o.classList.remove('ma');
+            lay0(ma.x,ma.y).classList.add('ma');
+        }
+        if(trungRan(ma.x,ma.y)){
+            thuaMan('Bóng ma đã bắt được rắn. Hít một hơi và thử lại màn này nhé.');
+        }
+    }
     function capNhatNguyHiem() {
         var m =Cacman[man];
         thoiGian+=m.mili;
         if(m.tuongNoi) capNhatTuongNoi();
         if(m.set) capNhatSet();
         if(m.nuiLua) capNhatNuiLua();
+        if(m.ma) capNhatMa();
     }
     function buocDi() {
         if(!dangChoi || tamDung)
@@ -471,6 +530,9 @@ $(function (){
         ran.unshift(dauMoi);
         if(dauMoi.x===moi.x && dauMoi.y===moi.y){
             moiAn++;
+            if(ma){
+                tgDong=thoiGian+Cacman[man].ma.dong;
+            }
             diem += 10*(man+1);
             if(diem>kyLuc){
                 kyLuc=diem;

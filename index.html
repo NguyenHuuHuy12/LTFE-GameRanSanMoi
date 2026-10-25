@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Snake san moi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<style>
+    body{
+        min-height: 100vh;
+        background: #aaaa;
+        background-image: radial-gradient(circle at 20% 10%, #bbbbbb,transparent 50%), radial-gradient(circle at 70% 60%, #135245,transparent 50%);
+        color: white;
+        font-family: Baskerville, serif;
+    }
+    .container-khung{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 10px 15px;
+    }
+    .container-thanhthongtin{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    .container-thanhthongtin .o-tt{
+        background: #1726;
+        border: 1px solid #333;
+        border-radius: 15px;
+        padding: 5px 10px;
+        margin-right: 10px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    .container-thanhthongtin .o-tt i{
+        color: orange;
+        margin-right: 10px;
+    }
+    .container-thanhthongtin #nut-dung, .container-thanhthongtin #nut-qua-man{
+        width: 44px;
+        height: 40px;
+        padding: 0;
+        border-radius: 15px;
+    }
+    .do-kho{
+        margin: 10px 0;
+        font-size: 15px;
+        color: #9db5;
+    }
+    .do-kho .progress{
+        height: 10px;
+        background: #135245;
+    }
+    .do-kho .progress-bar{
+        transition: width 0.8s;
+    }
+    .do-kho b{
+        color: aliceblue;
+        min-width: 40px;
+        text-align: right;
+    }
+    .khung-ban{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        background: #1726;
+        border:1px solid #333333 ;
+        border-radius: 15px;
+    }
+    .ban{
+        --o:25px;
+        --nen1:#1f3a26;
+        --nen2:#234430;
+        --tuong:#3333;
+        --ran:#756;
+        --dd:1;
+        display: grid;
+        border-radius: 10px;
+        overflow: hidden;
+        touch-action: none;
+    }
+    .ban .o{
+        position: relative;
+        width:var(--o);
+        height:var(--o);
+    }
+    .ban .o.chan{
+        background: var(--nen1);
+    }
+    .ban .o.le{
+        background: var(--nen2);
+    }
+    .ban .o.chop::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        background: var(--tuong);
+        border-radius: 5px;
+        animation: nhap 0.3s infinite;
+    }
+    @keyframes nhap{
+        50%{
+            opacity: 0.1;
+        }
+    }
+    .ban .o.dungnham::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        background: #ff2a00;
+        border-radius: 40%;
+        box-shadow: 0 0 6px 1px #ff6a00;
+    }
+    .ban .o.nui::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #5a2d1a;
+        box-shadow: inset 0 0 6px 1px #ff5a1f;
+    }
+    .ban .o.nui.phun::before {
+        background: #ff6a1f;
+        box-shadow: 0 0 10px 3px #ff6a1f;
+    }
+    .ban .o.ran::before, .ban .o.tuong::before, .ban .o.moi::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+    }
+    .ban .tuong::before {
+        background: var(--tuong);
+        border-radius: 5px;
+        box-shadow: inset 0 5px 0 #333;
+    }
+    .ban .o.ran::before {
+        background: var(--ran);
+        border-radius: 30%;
+        opacity: var(--dd, 1);
+
+    }
+    .ban .dau::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left:0;
+        right: 0;
+        bottom:0;
+    }
+    .ban .dau.h-phai::after{
+        background: radial-gradient(circle calc(var(--o) * 0.14) at 72% 25%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 72% 75%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+    }
+    .ban .dau.h-trai::after{
+        background: radial-gradient(circle calc(var(--o) * 0.14) at 28% 25%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 28% 75%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+    }
+    .ban .dau.h-len::after{
+        background: radial-gradient(circle calc(var(--o) * 0.14) at 25% 28%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 75% 28%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+    }
+    .ban .dau.h-xuong::after{
+        background: radial-gradient(circle calc(var(--o) * 0.14) at 25% 72%, #10200f 0 35%, #fff 38% 98%, transparent 100%), radial-gradient(circle calc(var(--o) * 0.14) at 75% 72%, #10200f 0 35%, #fff 38% 98%, transparent 100%);
+    }
+    .ban .moi::before{
+        background: red;
+        border-radius: 50%;
+        top:3px;
+        left:3px;
+        right:3px;
+        bottom:3px;
+    }
+    .ban .moi::after{
+        content: '';
+        position: absolute;
+        width: 30%;
+        top: 5%;
+        left:52%;
+        height: 16%;
+        border-radius: 50%;
+        transform: rotate(-30deg);
+        background: #5cc24a;
+    }
+    .ban .o.ma::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        background: #b44cff;
+        border-radius: 50% 50% 20% 20%;
+        box-shadow: 0 0 8px 2px #b44cff;
+    }
+    .ban .o.ma.dong::before {
+        background: #6ec6ff;
+        box-shadow: 0 0 8px 2px #6ec6ff;
+        opacity: 0.6;
+    }
+    .ban .o.set::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #ffe600;
+        border-radius: 30%;
+        box-shadow: 0 0 8px 2px #ffe600;
+    }
+    .ban .thua{
+        animation: rung 0.3s;
+    }
+    .ban.thua .ran::before{
+        background: red;
+    }
+    @keyframes rung{
+        25%{
+            transform: translateX(-4px);
+        }
+        75%{
+            transform: translateX(4px);
+        }
+    }
+    .modal-content{
+        background: #1726;
+        border: 1px solid #333;
+        color: white;
+        border-radius: 15px;
+        text-align: center;
+    }
+    .modal-content .modal-header,
+    .modal-content .modal-footer {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    .modal-content .modal-header {
+        justify-content: center;
+    }
+    .modal-content .modal-title {
+        font-family: "Baloo 2", "Segoe UI", Tahoma, sans-serif;
+        font-size: 24px;
+        color: #f4c542;
+    }
+    .modal-content .modal-body p {
+        font-size: 17px;
+        line-height: 1.5;
+    }
+    .modal-content .badge {
+        background: rgba(255, 255, 255, 0.08);
+        color: #9db5a2;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin: 3px;
+    }
+    .modal-content .badge b {
+        color: #eaf3e4;
+    }
+    .modal-content .btn-lg {
+        font-family: "Baloo 2", "Segoe UI", Tahoma, sans-serif;
+        font-weight: 700;
+        padding: 6px 26px;
+    }
+
+    .phim-di-chuyen {
+        display: grid;
+        margin: 12px auto 0;
+        width: 190px;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-areas: ". len ." "trai xuong phai";
+        gap: 6px;
+    }
+    .phim-di-chuyen .btn {
+        height: 54px;
+        background: #17261d;
+        color: #eaf3e4;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 20px;
+    }
+    .phim-di-chuyen [data-h=len] {
+        grid-area: len;
+    }
+    .phim-di-chuyen [data-h=trai] {
+        grid-area: trai;
+    }
+    .phim-di-chuyen [data-h=xuong] {
+        grid-area: xuong;
+    }
+    .phim-di-chuyen [data-h=phai] {
+        grid-area: phai;
+    }
+
+    @media (max-width: 560px) {
+        .container-thanhthongtin .o-tt {
+            font-size: 15px;
+            padding: 4px 8px;
+            margin-right: 5px;
+        }
+        .modal-content .modal-title {
+            font-size: 20px;
+        }
+        .modal-content .modal-body p {
+            font-size: 15px;
+        }
+    }
+</style>
+<body>
+
+<div class="container-khung">
+    <div class="container-thanhthongtin">
+        <div class="col o-tt"><i class="fa-solid fa-map-location-dot"></i>Màn <b id="soman">1</b>/<span id="tongman">4</span></div>
+        <div class="col o-tt"><i class="fa-solid fa-apple-whole"></i> <b id="somoi">0</b>/<span id="tongsomoi">5</span></div>
+        <div class="col o-tt"><i class="fa-solid fa-star"></i> <b id="diem">0</b></div>
+        <div class="col ky-luc"><i class="fa-solid fa-trophy"></i> <b id="kyluc">0</b></div>
+        <div class="col button">
+            <button id="nut-dung" type="button" class="btn-pause"><i class="fa-solid fa-pause"></i></button>
+            <button id="nut-qua-man" type="button" class="btn-pause" title="Qua màn"><i class="fa-solid fa-forward"></i></button>
+
+        </div>
+    </div>
+
+
+    <div class="d-flex align-items-center do-kho">
+        <span class="mr-2">Độ khó</span>
+        <div class="progress flex-grow-1">
+            <div id="vach-do-kho" class="progress-bar bg-success" role="progressbar" style="width: 0%" ></div>
+        </div>
+        <b id="so-do-kho" class="ml-2">0%</b>
+    </div>
+
+    <div id="khung-ban" class="khung-ban">
+        <div id="ban" class="ban"></div>
+    </div>
+
+    <div class="phim-di-chuyen d-md-none">
+        <button type="button" class="btn" data-h="len"><i class="fa-solid fa-chevron-up"></i></button>
+        <button type="button" class="btn" data-h="xuong"><i class="fa-solid fa-chevron-down"></i></button>
+        <button type="button" class="btn" data-h="trai"><i class="fa-solid fa-chevron-left"></i></button>
+        <button type="button" class="btn" data-h="phai"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-truyen" tabindex="-1" data-backdrop="static" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mp-tieu-de"></h5>
+            </div>
+            <div class="modal-body">
+                <p id="mp-noi-dung"></p>
+                <div id="mp-thong-so" class="d-flex flex-wrap justify-content-center">
+                </div>
+                <div class="modal-footer justify-content-center ">
+                    <button id="mp-nut" type="button" class="btn btn-success btn-lg"></button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
